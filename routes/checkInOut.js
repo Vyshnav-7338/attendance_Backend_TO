@@ -9,7 +9,7 @@ const authenticate = require('../jwt');
 
 const storage = multer.diskStorage({
   destination: (req, file, cd) => {
-    cd(null, "./public/images");
+    cd(null, "public/images");
   },
   filename: (req, file, cb) => {
     cb(
