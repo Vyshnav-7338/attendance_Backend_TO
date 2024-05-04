@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Welcome User</h2>
+    <button class="btn btn-danger" id="logoutBtn">Logout</button>
+    <div>
+      <h3>Attendance</h3>
+      <button class="btn btn-primary" onclick="window.location.href='check_in_out.html'">Check In/Out</button>
+      <button class="btn btn-primary" onclick="window.location.href='view_attendance.html'">View Attendance</button>
+    </div>
+  </div>
+</body>
+<script>
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "../index.html";
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+    localStorage.removeItem("token");
+    window.location.href = "../index.html";
+  });
+</script>
+</html>

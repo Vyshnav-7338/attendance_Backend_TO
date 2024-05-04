@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check In/Out</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Check In/Out</h1>
+        
+        <div id="checkInFormContainer">
+            <h2>Check In</h2>
+            <form id="checkInForm" enctype="multipart/form-data">
+                <input type="file" name="checkInPhoto" accept="image/*" required>
+                <button type="submit" class="btn btn-primary">Check In</button>
+            </form>
+        </div>
+
+        <div id="checkOutFormContainer" style="display: none;">
+            <h2>Check Out</h2>
+            <form id="checkOutForm" enctype="multipart/form-data">
+                <input type="file" name="checkOutPhoto" accept="image/*" required>
+                <button type="submit" class="btn btn-primary">Check Out</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script>
+        document.getElementById('checkInForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const token = localStorage.getItem("token");
+            
+            try {
+                const response = await fetch('http://68.178.163.246:3004/api/checkin', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                      Authorization: token,
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('Checked in successfully');
+                    document.getElementById('checkInFormContainer').style.display = 'none';
+                    document.getElementById('checkOutFormContainer').style.display = 'block';
+                    document.getElementById('checkInForm').reset();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred, please try again later');
+            }
+        });
+
+        document.getElementById('checkOutForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem("token");
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('http://68.178.163.246:3004/api/checkout', {
+                    method: 'PUT',
+                    body: formData,
+                    headers: {
+                      Authorization: token,
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('Checked out successfully');
+                    document.getElementById('checkInFormContainer').style.display = 'block';
+                    document.getElementById('checkOutFormContainer').style.display = 'none';
+                    document.getElementById('checkOutForm').reset();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred, please try again later');
+            }
+        });
+    </script>
+</body>
+</html>

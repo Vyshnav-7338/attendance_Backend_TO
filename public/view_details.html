@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Check-in/Check-out Details</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .photo {
+      max-width: 200px;
+      max-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Check-in/Check-out Details</h2>
+    <div>
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate">
+      <button onclick="fetchData()">Filter</button>
+    </div>
+    <!-- Table to display check-in/check-out details -->
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>UserName</th>
+          <th>Check-in Time</th>
+          <th>Check-out Time</th>
+          <th>Check-in Photo</th>
+          <th>Check-out Photo</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+    <div id="tableContainer"></div>
+
+  </div>
+
+  <script>
+    async function fetchData() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const response = await fetch(`http://68.178.163.246:3004/api/checkInOut?startDate=${startDate}&endDate=${endDate}`);
+      const { checkInOutData, monthlyAttendance } = await response.json();
+
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+      checkInOutData.forEach(entry => {
+        const row = document.createElement('tr');
+        const createdAtDate = new Date(entry.createdAt).toLocaleDateString('en-IN'); // Format date (Indian)
+        const checkInTime = new Date(entry.checkInTime).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }); // Format time and convert to IST
+        const checkOutTime = new Date(entry.checkOutTime).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }); // Format time and convert to IST
+
+        row.innerHTML = `
+          <td>${createdAtDate}</td>
+          <td>${entry.userId.name}</td>
+          <td>${checkInTime}</td>
+          <td>${checkOutTime}</td>
+        `;
+
+        // Create link for checkInPhoto
+        const checkInPhotoCell = document.createElement('td');
+        if (entry.checkInPhoto) {
+          const checkInPhotoLink = document.createElement('a');
+          checkInPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkInPhoto}`;
+          checkInPhotoLink.textContent = 'View Photo';
+          checkInPhotoCell.appendChild(checkInPhotoLink);
+        } else {
+          checkInPhotoCell.textContent = 'Nil';
+        }
+        row.appendChild(checkInPhotoCell);
+
+        // Create link for checkOutPhoto
+        const checkOutPhotoCell = document.createElement('td');
+        if (entry.checkOutPhoto) {
+          const checkOutPhotoLink = document.createElement('a');
+          checkOutPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkOutPhoto}`;
+          checkOutPhotoLink.textContent = 'View Photo';
+          checkOutPhotoCell.appendChild(checkOutPhotoLink);
+        } else {
+          checkOutPhotoCell.textContent = 'Nil';
+        }
+        row.appendChild(checkOutPhotoCell);
+
+        tableBody.appendChild(row);
+      });
+
+      const tableContainer = document.getElementById('tableContainer');
+      if (monthlyAttendance) {
+        let tableHTML = '<h3>Monthly Attendance</h3><table class="table"><thead><tr><th>User</th><th>Month-Year</th><th>Check-ins</th><th>Check-outs</th></tr></thead><tbody>';
+        Object.entries(monthlyAttendance).forEach(([user, attendanceByMonth]) => {
+          Object.entries(attendanceByMonth).forEach(([monthYear, { checkIns, checkOuts }]) => {
+            const month = monthYear.split('-')[1];
+            const year = monthYear.split('-')[0];
+            tableHTML += `<tr><td>${user}</td><td>${year}-${month}</td><td>${checkIns}</td><td>${checkOuts}</td></tr>`;
+          });
+        });
+        tableHTML += '</tbody></table>';
+        tableContainer.innerHTML = tableHTML;
+      } else {
+        tableContainer.innerHTML = '<p>No data available</p>';
+      }
+    }
+  </script>
+    <script>
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        window.location.href = "../index.html";
+      }
+    </script>
+</body>
+</html>
