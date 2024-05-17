@@ -37,9 +37,9 @@
                 window.location.href = '../index.html';
                 return;
             }
-
+            const apiUrl = getApiUrl();
             try {
-                const response = await fetch('http://68.178.163.246:3004/api/checkInOut/status', {
+                const response = await fetch(`${apiUrl}/api/checkInOut/status`, {
                     method: 'GET',
                     headers: {
                         Authorization: token,
@@ -48,6 +48,7 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data)
                     const latestCheckIn = data.checkInOutData.find(entry => !entry.isCheckedIn);
                     if (latestCheckIn) {
                         document.getElementById('checkInFormContainer').style.display = 'none';
@@ -81,7 +82,7 @@
                 const formData = new FormData(document.getElementById('checkInForm'));
                 const token = localStorage.getItem('token');
 
-                const response = await fetch('http://68.178.163.246:3004/api/checkin', {
+                const response = await fetch(`${apiUrl}/api/checkin`, {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -109,7 +110,7 @@
                 const formData = new FormData(document.getElementById('checkOutForm'));
                 const token = localStorage.getItem('token');
 
-                const response = await fetch('http://68.178.163.246:3004/api/checkout', {
+                const response = await fetch(`${apiUrl}/api/checkout`, {
                     method: 'PUT',
                     body: formData,
                     headers: {

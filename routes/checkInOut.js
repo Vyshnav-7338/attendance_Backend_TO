@@ -87,7 +87,9 @@ router.get('/api/attendance', async (req, res) => {
 });
 router.get('/api/checkInOut/status', authenticate, async (req, res) => {
   try {
+    console.log("hello")
       const userId = req.userId;
+      console.log(userId)
 
       const latestStatus = await CheckInOut.findOne({ userId }).sort({ createdAt: -1 });
 
