@@ -48,9 +48,8 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data)
-                    const latestCheckIn = data.checkInOutData.find(entry => !entry.isCheckedIn);
-                    if (!latestCheckIn) {
+                    console.log(data.isCheckedIn)
+                    if (data) {
                         document.getElementById('checkInFormContainer').style.display = 'none';
                         document.getElementById('checkOutFormContainer').style.display = 'block';
                     } else {
