@@ -37,8 +37,8 @@
                 window.location.href = '../index.html';
                 return;
             }
-            const apiUrl = getApiUrl();
             try {
+                const apiUrl = getApiUrl();
                 const response = await fetch(`${apiUrl}/api/checkInOut/status`, {
                     method: 'GET',
                     headers: {
@@ -79,6 +79,8 @@
 
         async function performCheckIn() {
             try {
+                const apiUrl = getApiUrl();
+
                 const formData = new FormData(document.getElementById('checkInForm'));
                 const token = localStorage.getItem('token');
 
@@ -107,6 +109,8 @@
 
         async function performCheckOut() {
             try {
+                const apiUrl = getApiUrl();
+
                 const formData = new FormData(document.getElementById('checkOutForm'));
                 const token = localStorage.getItem('token');
 
