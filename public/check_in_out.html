@@ -49,7 +49,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data.isCheckedIn)
-                    if (!data) {
+                    if (!data.isCheckedIn||data.isCheckedIn==false) {
                         document.getElementById('checkInFormContainer').style.display = 'none';
                         document.getElementById('checkOutFormContainer').style.display = 'block';
                     } else {
