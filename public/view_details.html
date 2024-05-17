@@ -6,21 +6,71 @@
   <title>View Check-in/Check-out Details</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    /* Custom styles */
     .photo {
       max-width: 200px;
       max-height: 200px;
+    }
+
+    /* Style for the filter section */
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    /* Style for the filter inputs and button */
+    .filter-input {
+      margin-right: 10px;
+    }
+
+    /* Style for the table */
+    .table {
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+    }
+
+    /* Style for table headers */
+    .table th {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    /* Style for table body */
+    .table tbody tr:nth-of-type(odd) {
+      background-color: #f8f9fa;
+    }
+
+    /* Style for table cells */
+    .table td, .table th {
+      padding: 10px;
+    }
+
+    /* Style for the filter button */
+    .filter-btn {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Style for the container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
   <div class="container mt-5">
     <h2>Check-in/Check-out Details</h2>
-    <div>
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate">
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate">
-      <button onclick="fetchData()">Filter</button>
+    <!-- Filter section -->
+    <div class="filter-section">
+      <label for="startDate" class="filter-input">Start Date:</label>
+      <input type="date" id="startDate" class="filter-input">
+      <label for="endDate" class="filter-input">End Date:</label>
+      <input type="date" id="endDate" class="filter-input">
+      <button onclick="fetchData()" class="filter-btn">Filter</button>
     </div>
     <!-- Table to display check-in/check-out details -->
     <table class="table mt-3">
@@ -37,8 +87,6 @@
       <tbody id="tableBody">
       </tbody>
     </table>
-    <div id="tableContainer"></div>
-
   </div>
 
   <script>
