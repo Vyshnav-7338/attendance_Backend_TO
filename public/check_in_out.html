@@ -31,11 +31,49 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = '../index.html';
+                return;
             }
+
+            try {
+                const response = await fetch('http://68.178.163.246:3004/api/checkInOut/status', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: token,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const latestCheckIn = data.checkInOutData.find(entry => !entry.isCheckedIn);
+                    if (latestCheckIn) {
+                        document.getElementById('checkInFormContainer').style.display = 'none';
+                        document.getElementById('checkOutFormContainer').style.display = 'block';
+                    } else {
+                        document.getElementById('checkInFormContainer').style.display = 'block';
+                        document.getElementById('checkOutFormContainer').style.display = 'none';
+                    }
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred, please try again later');
+            }
+        });
+
+        document.getElementById('checkInForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            performCheckIn();
+        });
+
+        document.getElementById('checkOutForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            performCheckOut();
         });
 
         async function performCheckIn() {
@@ -93,16 +131,6 @@
                 alert('An error occurred, please try again later');
             }
         }
-
-        document.getElementById('checkInForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            performCheckIn();
-        });
-
-        document.getElementById('checkOutForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            performCheckOut();
-        });
     </script>
 </body>
 </html>

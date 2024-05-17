@@ -85,6 +85,22 @@ router.get('/api/attendance', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
   }
 });
+router.get('/api/checkInOut/status', authenticate, async (req, res) => {
+  try {
+      const userId = req.userId;
+
+      const latestStatus = await CheckInOut.findOne({ userId }).sort({ createdAt: -1 });
+
+      if (!latestStatus) {
+          return res.status(404).json({ error: 'No check-in/check-out record found' });
+      }
+
+      res.json({ isCheckedIn: latestStatus.isCheckedIn });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
 router.get('/api/checkInOut', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
