@@ -1,67 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Check In/Out</title>
     <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-      /* Custom CSS */
-      body {
-        background-color: #f8f9fa; /* Light gray background */
-      }
-
-      .container {
-        background-color: #fff; /* White container background */
-        border-radius: 5px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-      }
-
-      h1,
-      h2 {
-        color: #007bff; /* Blue headings */
-      }
-
-      input[type="file"] {
-        margin-bottom: 10px;
-      }
-
-      .btn-primary {
-        background-color: #007bff; /* Blue button */
-        border-color: #007bff;
-      }
-
-      .btn-primary:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        border-color: #0056b3;
-      }
+        /* Custom CSS */
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .container {
+            background-color: #fff; /* White container background */
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        h1, h2 {
+            color: #007bff; /* Blue headings */
+        }
+        .btn-primary {
+            background-color: #007bff; /* Blue button */
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+        .video-container, .photo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        video, img {
+            max-width: 100%;
+            height: auto;
+            display: none;
+        }
+        #video, #videoOut {
+            display: block;
+        }
+        #photoCheckIn, #photoCheckOut {
+            display: none;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container mt-5">
-      <h1>Check In/Out</h1>
+        <h1>Check In/Out</h1>
 
-      <div id="checkInFormContainer">
-        <h2>Check In</h2>
-        <form id="checkInForm" enctype="multipart/form-data">
-          <input type="file" name="checkInPhoto" accept="image/*" required />
-          <button type="submit" class="btn btn-primary">Check In</button>
-        </form>
-      </div>
+        <div id="checkInFormContainer">
+            <h2>Check In</h2>
+            <div class="video-container">
+                <video id="video" playsinline autoplay></video>
+                <img id="photoCheckIn" alt="Check In Photo">
+            </div>
+            <button id="startCameraCheckIn" class="btn btn-primary">Start Camera</button>
+            <button id="takePhotoCheckIn" class="btn btn-primary" style="display:none;">Take Photo</button>
+            <button id="checkIn" class="btn btn-primary" style="display:none;">Check In</button>
+        </div>
 
-      <div id="checkOutFormContainer" style="display: none">
-        <h2>Check Out</h2>
-        <form id="checkOutForm" enctype="multipart/form-data">
-          <input type="file" name="checkOutPhoto" accept="image/*" required />
-          <button type="submit" class="btn btn-primary">Check Out</button>
-        </form>
-      </div>
+        <div id="checkOutFormContainer" style="display: none">
+            <h2>Check Out</h2>
+            <div class="video-container">
+                <video id="videoOut" playsinline autoplay></video>
+                <img id="photoCheckOut" alt="Check Out Photo">
+            </div>
+            <button id="startCameraCheckOut" class="btn btn-primary">Start Camera</button>
+            <button id="takePhotoCheckOut" class="btn btn-primary" style="display:none;">Take Photo</button>
+            <button id="checkOut" class="btn btn-primary" style="display:none;">Check Out</button>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="config.js"></script>
@@ -69,124 +78,170 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          window.location.href = "../index.html";
-          return;
-        }
-        try {
-          const apiUrl = getApiUrl();
-          const response = await fetch(`${apiUrl}/api/checkInOut/status`, {
-            method: "GET",
-            headers: {
-              Authorization: token,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log(data.isCheckedIn);
-            if (data && data.isCheckedIn == true) {
-              console.log("hello");
-              document.getElementById("checkInFormContainer").style.display =
-                "none";
-              document.getElementById("checkOutFormContainer").style.display =
-                "block";
-            } else {
-              console.log("hi");
-
-              document.getElementById("checkInFormContainer").style.display =
-                "block";
-              document.getElementById("checkOutFormContainer").style.display =
-                "none";
+        document.addEventListener("DOMContentLoaded", async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "../index.html";
+                return;
             }
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred, please try again later");
-        }
-      });
+            
+            try {
+                const apiUrl = getApiUrl();
+                const response = await fetch(`${apiUrl}/api/checkInOut/status`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: token,
+                    },
+                });
 
-      document
-        .getElementById("checkInForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          performCheckIn();
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.isCheckedIn) {
+                        document.getElementById("checkInFormContainer").style.display = "none";
+                        document.getElementById("checkOutFormContainer").style.display = "block";
+                    } else {
+                        document.getElementById("checkInFormContainer").style.display = "block";
+                        document.getElementById("checkOutFormContainer").style.display = "none";
+                    }
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred, please try again later");
+            }
         });
 
-      document
-        .getElementById("checkOutForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          performCheckOut();
+        document.getElementById("startCameraCheckIn").addEventListener("click", async () => {
+            await startCamera('video', 'startCameraCheckIn', 'takePhotoCheckIn', 'checkIn');
         });
 
-      async function performCheckIn() {
-        try {
-          const apiUrl = getApiUrl();
+        document.getElementById("takePhotoCheckIn").addEventListener("click", () => {
+            takePhoto('video', 'photoCheckIn', 'checkIn');
+        });
 
-          const formData = new FormData(document.getElementById("checkInForm"));
-          const token = localStorage.getItem("token");
+        document.getElementById("startCameraCheckOut").addEventListener("click", async () => {
+            await startCamera('videoOut', 'startCameraCheckOut', 'takePhotoCheckOut', 'checkOut');
+        });
 
-          const response = await fetch(`${apiUrl}/api/checkin`, {
-            method: "POST",
-            body: formData,
-            headers: {
-              Authorization: token,
-            },
-          });
+        document.getElementById("takePhotoCheckOut").addEventListener("click", () => {
+            takePhoto('videoOut', 'photoCheckOut', 'checkOut');
+        });
 
-          if (response.ok) {
-            alert("Checked in successfully");
-            document.getElementById("checkInFormContainer").style.display =
-              "none";
-            document.getElementById("checkOutFormContainer").style.display =
-              "block";
-            document.getElementById("checkInForm").reset();
-          } else {
-            const errorData = await response.json();
-            alert(errorData.error);
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred, please try again later");
+        async function startCamera(videoId, startButtonId, takePhotoButtonId, actionButtonId) {
+            const video = document.getElementById(videoId);
+            const startButton = document.getElementById(startButtonId);
+            const takePhotoButton = document.getElementById(takePhotoButtonId);
+            const actionButton = document.getElementById(actionButtonId);
+
+            startButton.style.display = 'none';
+
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            video.style.display = 'block';
+            takePhotoButton.style.display = 'inline-block';
+            actionButton.style.display = 'none';
         }
-      }
 
-      async function performCheckOut() {
-        try {
-          const apiUrl = getApiUrl();
+        function takePhoto(videoId, photoId, actionButtonId) {
+            const video = document.getElementById(videoId);
+            const photo = document.getElementById(photoId);
+            const actionButton = document.getElementById(actionButtonId);
 
-          const formData = new FormData(
-            document.getElementById("checkOutForm")
-          );
-          const token = localStorage.getItem("token");
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
 
-          const response = await fetch(`${apiUrl}/api/checkout`, {
-            method: "PUT",
-            body: formData,
-            headers: {
-              Authorization: token,
-            },
-          });
+            const dataUrl = canvas.toDataURL('image/png');
+            photo.src = dataUrl;
+            photo.style.display = 'block';
+            video.style.display = 'none';
+            actionButton.style.display = 'inline-block';
 
-          if (response.ok) {
-            alert("Checked out successfully");
-            document.getElementById("checkInFormContainer").style.display =
-              "block";
-            document.getElementById("checkOutFormContainer").style.display =
-              "none";
-            document.getElementById("checkOutForm").reset();
-          } else {
-            const errorData = await response.json();
-            alert(errorData.error);
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred, please try again later");
+            // Stop the video stream
+            video.srcObject.getTracks().forEach(track => track.stop());
         }
-      }
+
+        document.getElementById("checkIn").addEventListener("click", async () => {
+            await performCheckIn();
+        });
+
+        document.getElementById("checkOut").addEventListener("click", async () => {
+            await performCheckOut();
+        });
+
+        async function performCheckIn() {
+            try {
+                const apiUrl = getApiUrl();
+                const token = localStorage.getItem("token");
+                const photo = document.getElementById("photoCheckIn").src;
+
+                const formData = new FormData();
+                formData.append("checkInPhoto", dataURLtoBlob(photo));
+
+                const response = await fetch(`${apiUrl}/api/checkin`, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        Authorization: token,
+                    },
+                });
+
+                if (response.ok) {
+                    alert("Checked in successfully");
+                    document.getElementById("checkInFormContainer").style.display = "none";
+                    document.getElementById("checkOutFormContainer").style.display = "block";
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred, please try again later");
+            }
+        }
+
+        async function performCheckOut() {
+            try {
+                const apiUrl = getApiUrl();
+                const token = localStorage.getItem("token");
+                const photo = document.getElementById("photoCheckOut").src;
+
+                const formData = new FormData();
+                formData.append("checkOutPhoto", dataURLtoBlob(photo));
+
+                const response = await fetch(`${apiUrl}/api/checkout`, {
+                    method: "PUT",
+                    body: formData,
+                    headers: {
+                        Authorization: token,
+                    },
+                });
+
+                if (response.ok) {
+                    alert("Checked out successfully");
+                    document.getElementById("checkInFormContainer").style.display = "block";
+                    document.getElementById("checkOutFormContainer").style.display = "none";
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred, please try again later");
+            }
+        }
+
+        function dataURLtoBlob(dataURL) {
+            const parts = dataURL.split(',');
+            const byteString = atob(parts[1]);
+            const mimeString = parts[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }
     </script>
-  </body>
+</body>
 </html>
