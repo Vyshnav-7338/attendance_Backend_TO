@@ -36,7 +36,6 @@
         video, img {
             max-width: 100%;
             height: auto;
-            display: none;
         }
         #video, #videoOut {
             display: block;
@@ -84,7 +83,6 @@
                 window.location.href = "../index.html";
                 return;
             }
-            
             try {
                 const apiUrl = getApiUrl();
                 const response = await fetch(`${apiUrl}/api/checkInOut/status`, {
