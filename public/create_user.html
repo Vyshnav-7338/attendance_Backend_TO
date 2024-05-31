@@ -1,59 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container mt-5">
-        <h2>Create User</h2>
-        <form id="createUserForm">
-            <div class="mb-3">
-                <label for="userName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="userName" required>
-            </div>
-            <div class="mb-3">
-                <label for="userEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="userEmail" required>
-            </div>
-            <div class="mb-3">
-                <label for="userPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="userPassword" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create User</button>
-        </form>
+      <h2>Create User</h2>
+      <form id="createUserForm">
+        <div class="mb-3">
+          <label for="userName" class="form-label">Name</label>
+          <input type="text" class="form-control" id="userName" required />
+        </div>
+        <div class="mb-3">
+          <label for="userPhone" class="form-label">Phone</label>
+          <input type="text" class="form-control" id="userPhone" required />
+        </div>
+        <div class="mb-3">
+          <label for="userEmail" class="form-label">Email</label>
+          <input type="email" class="form-control" id="userEmail" required />
+        </div>
+        <div class="mb-3">
+          <label for="userPassword" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="userPassword"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Create User</button>
+      </form>
 
-        <h2 class="mt-5">User List</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="userList">
-                <!-- Users will be listed here -->
-            </tbody>
-        </table>
+      <h2 class="mt-5">User List</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- Users will be listed here -->
+        </tbody>
+      </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -61,118 +82,128 @@
 
     <script>
       const token = localStorage.getItem("token");
- 
- if (!token) {
-   window.location.href = "../index.html";
- }
-</script> 
+
+      if (!token) {
+        window.location.href = "../index.html";
+      }
+    </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const apiUrl = getApiUrl();
+      document.addEventListener("DOMContentLoaded", function () {
+        const apiUrl = getApiUrl();
 
-            const createUserForm = document.getElementById('createUserForm');
+        const createUserForm = document.getElementById("createUserForm");
 
-            // Function to fetch and display users
-            async function fetchUsers() {
-                try {
-     const token = localStorage.getItem("token");
+        // Function to fetch and display users
+        async function fetchUsers() {
+          try {
+            const token = localStorage.getItem("token");
 
-                    const response = await fetch(`${apiUrl}/admin/users`, {
-                        headers: {
-                          Authorization: token,
+            const response = await fetch(`${apiUrl}/admin/users`, {
+              headers: {
+                Authorization: token,
+              },
+            });
 
-                        }
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    const users = await response.json();
-
-                    const userList = document.getElementById('userList');
-                    userList.innerHTML = '';
-
-                    users.forEach(user => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
-                            <td><button class="btn btn-danger btn-sm delete-user" data-id="${user._id}">Delete</button></td>
-                        `;
-                        userList.appendChild(row);
-                    });
-                } catch (error) {
-                    console.error('There was a problem with the fetch operation:', error);
-                }
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
             }
 
-            // Event listener for form submission
-            createUserForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
+            const users = await response.json();
 
-                const name = document.getElementById('userName').value;
-                const email = document.getElementById('userEmail').value;
-                const password = document.getElementById('userPassword').value;
+            const userList = document.getElementById("userList");
+            userList.innerHTML = "";
 
-                try {
-     const token = localStorage.getItem("token");
-     const apiUrl = getApiUrl();
+            users.forEach((user) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone}</td>
+                            <td><button class="btn btn-danger btn-sm delete-user" data-id="${user._id}">Delete</button></td>
+                        `;
+              userList.appendChild(row);
+            });
+          } catch (error) {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          }
+        }
 
-                    const response = await fetch(`${apiUrl}/users`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: token,
+        // Event listener for form submission
+        createUserForm.addEventListener("submit", async function (event) {
+          event.preventDefault();
 
-                        },
-                        body: JSON.stringify({ name, email, password })
-                    });
+          const name = document.getElementById("userName").value;
+          const email = document.getElementById("userEmail").value;
+          const password = document.getElementById("userPassword").value;
+          const phone = document.getElementById("userPhone").value;
 
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+          try {
+            const token = localStorage.getItem("token");
+            const apiUrl = getApiUrl();
 
-                    fetchUsers();
-                    createUserForm.reset();
-                } catch (error) {
-                    console.error('There was a problem with the fetch operation:', error);
-                    alert('Error creating user');
-                }
+            const response = await fetch(`${apiUrl}/users`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+              },
+              body: JSON.stringify({ name, email, password, phone }),
             });
 
-            // Fetch users when the page loads
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
             fetchUsers();
-
-            // Event delegation for deleting users
-            document.getElementById('userList').addEventListener('click', async function(event) {
-                if (event.target.classList.contains('delete-user')) {
-                    const userId = event.target.getAttribute('data-id');
-
-                    try {
-     const token = localStorage.getItem("token");
-     const apiUrl = getApiUrl();
-
-                        const response = await fetch(`${apiUrl}/user/${userId}`, {
-                            method: 'DELETE',
-                            headers: {
-                              Authorization: token,
-
-                            }
-                        });
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
-                        fetchUsers();
-                    } catch (error) {
-                        console.error('There was a problem with the fetch operation:', error);
-                        alert('Error deleting user');
-                    }
-                }
-            });
+            createUserForm.reset();
+          } catch (error) {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+            alert("Error creating user");
+          }
         });
+
+        // Fetch users when the page loads
+        fetchUsers();
+
+        // Event delegation for deleting users
+        document
+          .getElementById("userList")
+          .addEventListener("click", async function (event) {
+            if (event.target.classList.contains("delete-user")) {
+              const userId = event.target.getAttribute("data-id");
+
+              try {
+                const token = localStorage.getItem("token");
+                const apiUrl = getApiUrl();
+
+                const response = await fetch(`${apiUrl}/user/${userId}`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: token,
+                  },
+                });
+
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+
+                fetchUsers();
+              } catch (error) {
+                console.error(
+                  "There was a problem with the fetch operation:",
+                  error
+                );
+                alert("Error deleting user");
+              }
+            }
+          });
+      });
     </script>
-</body>
+  </body>
 </html>

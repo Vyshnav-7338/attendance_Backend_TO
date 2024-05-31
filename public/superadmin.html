@@ -1,181 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Super Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Super Admin Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <button class="btn btn-danger" id="logoutBtn">Logout</button>
-                    </li>
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Super Admin Dashboard</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <button class="btn btn-danger" id="logoutBtn">Logout</button>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container mt-5">
-        <h2>Create Admin</h2>
-        <form id="createAdminForm">
-            <div class="mb-3">
-                <label for="adminName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="adminName" required>
-            </div>
-            <div class="mb-3">
-                <label for="adminEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="adminEmail" required>
-            </div>
-            <div class="mb-3">
-                <label for="adminPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="adminPassword" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Admin</button>
-        </form>
+      <h2>Create Admin</h2>
+      <form id="createAdminForm">
+        <div class="mb-3">
+          <label for="adminName" class="form-label">Name</label>
+          <input type="text" class="form-control" id="adminName" required />
+        </div>
+        <div class="mb-3">
+          <label for="adminEmail" class="form-label">Email</label>
+          <input type="email" class="form-control" id="adminEmail" required />
+        </div>
+        <div class="mb-3">
+          <label for="adminPhone" class="form-label">Phone</label>
+          <input type="text" class="form-control" id="adminPhone" required />
+        </div>
+        <div class="mb-3">
+          <label for="adminPassword" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="adminPassword"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Create Admin</button>
+      </form>
 
-        <h2 class="mt-5">Admin List</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="adminList">
-                <!-- Admins will be listed here -->
-            </tbody>
-        </table>
+      <h2 class="mt-5">Admin List</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminList">
+          <!-- Admins will be listed here -->
+        </tbody>
+      </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="config.js"></script>
 
-   <script>
-     const token = localStorage.getItem("token");
-
-if (!token) {
-  window.location.href = "../index.html";
-}
-
-document.getElementById("logoutBtn").addEventListener("click", function() {
-    localStorage.removeItem("token");
-    window.location.href = "../index.html";
-  });
-   </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const createAdminForm = document.getElementById('createAdminForm');
+      const token = localStorage.getItem("token");
 
-            // Function to fetch and display admins
-            async function fetchAdmins() {
-     const token = localStorage.getItem("token");
-     const apiUrl = getApiUrl();
+      if (!token) {
+        window.location.href = "../index.html";
+      }
 
-                try {
-                    const response = await fetch(`${apiUrl}/superadmin/admins`, {
-                        headers: {
-                        Authorization: token,
-                    },
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    const admins = await response.json();
-
-                    const adminList = document.getElementById('adminList');
-                    adminList.innerHTML = '';
-
-                    admins.forEach(admin => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${admin.name}</td>
-                            <td>${admin.email}</td>
-                            <td><button class="btn btn-danger btn-sm delete-admin" data-id="${admin._id}">Delete</button></td>
-                        `;
-                        adminList.appendChild(row);
-                    });
-                } catch (error) {
-                    console.error('There was a problem with the fetch operation:', error);
-                }
-            }
-
-            // Event listener for form submission
-            createAdminForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-
-                const name = document.getElementById('adminName').value;
-                const email = document.getElementById('adminEmail').value;
-                const password = document.getElementById('adminPassword').value;
-
-                try {
-     const token = localStorage.getItem("token");
-     const apiUrl = getApiUrl();
-
-                    const response = await fetch(`${apiUrl}/admin`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: token,
-
-                        },
-                        body: JSON.stringify({ name, email, password })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    fetchAdmins();
-                    createAdminForm.reset();
-                } catch (error) {
-                    console.error('There was a problem with the fetch operation:', error);
-                    alert('Error creating admin');
-                }
-            });
-
-            // Fetch admins when the page loads
-            fetchAdmins();
-
-            // Event delegation for deleting admins
-            document.getElementById('adminList').addEventListener('click', async function(event) {
-                if (event.target.classList.contains('delete-admin')) {
-                    const adminId = event.target.getAttribute('data-id');
-
-                    try {
-     const token = localStorage.getItem("token");
-     const apiUrl = getApiUrl();
-
-                        const response = await fetch(`${apiUrl}/admin/${adminId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                Authorization: token,
-
-                            }
-                        });
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
-                        fetchAdmins();
-                    } catch (error) {
-                        console.error('There was a problem with the fetch operation:', error);
-                        alert('Error deleting admin');
-                    }
-                }
-            });
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", function () {
+          localStorage.removeItem("token");
+          window.location.href = "../index.html";
         });
     </script>
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const createAdminForm = document.getElementById("createAdminForm");
+
+        // Function to fetch and display admins
+        async function fetchAdmins() {
+          const token = localStorage.getItem("token");
+          const apiUrl = getApiUrl();
+
+          try {
+            const response = await fetch(`${apiUrl}/superadmin/admins`, {
+              headers: {
+                Authorization: token,
+              },
+            });
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const admins = await response.json();
+
+            const adminList = document.getElementById("adminList");
+            adminList.innerHTML = "";
+
+            admins.forEach((admin) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                            <td>${admin.name}</td>
+                            <td>${admin.email}</td>
+                            <td>${admin.phone}</td>
+                            <td><button class="btn btn-danger btn-sm delete-admin" data-id="${admin._id}">Delete</button></td>
+                        `;
+              adminList.appendChild(row);
+            });
+          } catch (error) {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          }
+        }
+
+        // Event listener for form submission
+        createAdminForm.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const name = document.getElementById("adminName").value;
+          const email = document.getElementById("adminEmail").value;
+          const password = document.getElementById("adminPassword").value;
+          const phone = document.getElementById("adminPhone").value;
+
+          try {
+            const token = localStorage.getItem("token");
+            const apiUrl = getApiUrl();
+
+            const response = await fetch(`${apiUrl}/admin`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+              },
+              body: JSON.stringify({ name, email, password, phone }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            fetchAdmins();
+            createAdminForm.reset();
+          } catch (error) {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+            alert("Error creating admin");
+          }
+        });
+
+        // Fetch admins when the page loads
+        fetchAdmins();
+
+        // Event delegation for deleting admins
+        document
+          .getElementById("adminList")
+          .addEventListener("click", async function (event) {
+            if (event.target.classList.contains("delete-admin")) {
+              const adminId = event.target.getAttribute("data-id");
+
+              try {
+                const token = localStorage.getItem("token");
+                const apiUrl = getApiUrl();
+
+                const response = await fetch(`${apiUrl}/admin/${adminId}`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: token,
+                  },
+                });
+
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+
+                fetchAdmins();
+              } catch (error) {
+                console.error(
+                  "There was a problem with the fetch operation:",
+                  error
+                );
+                alert("Error deleting admin");
+              }
+            }
+          });
+      });
+    </script>
+  </body>
 </html>

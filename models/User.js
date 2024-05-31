@@ -16,16 +16,16 @@ const schema = mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ['superadmin', 'admin', 'user'],
-      default: 'user',
-  },
-  adminId: {
+      enum: ["superadmin", "admin", "user"],
+      default: "user",
+    },
+    adminId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: function () {
-          return this.role === 'user';
+        return this.role === "user";
       },
-  },
+    },
   },
   {
     timestamps: true,
