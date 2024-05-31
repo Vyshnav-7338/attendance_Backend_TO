@@ -22,6 +22,8 @@
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
   </div>
+  <script src="config.js"></script>
+
   <script>
 document.getElementById('loginForm').addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -30,7 +32,9 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
   const password = document.getElementById('password').value;
 
   try {
-    const response = await fetch('http://68.178.163.246:3004/api/login', { 
+    const apiUrl = getApiUrl();
+
+    const response = await fetch(`${apiUrl}/api/login`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,9 +46,12 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
       const data = await response.json();
       console.log("Login success",data)
       localStorage.setItem('token', data.token);
-      if (data.role === 'su') {
+      if (data.role === 'admin') {
         window.location.href = 'dashboard_admin.html';
-      } else if (data.role === 'user') {
+      } else if (data.role === 'superadmin') {
+        window.location.href = 'superadmin.html';
+      }
+      else if (data.role === 'user') {
         window.location.href = 'dashboard_user.html';
       }
     } else {

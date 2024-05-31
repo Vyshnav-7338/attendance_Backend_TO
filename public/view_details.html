@@ -89,12 +89,22 @@
     </table>
     <div id="tableContainer"></div>
   </div>
+  <script src="config.js"></script>
 
   <script>
     async function fetchData() {
+  const token = localStorage.getItem("token");
+  const apiUrl = getApiUrl();
+
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
-      const response = await fetch(`http://68.178.163.246:3004/api/checkInOut?startDate=${startDate}&endDate=${endDate}`);
+      const response = await fetch(`${apiUrl}/api/checkInOut?startDate=${startDate}&endDate=${endDate}`,{
+        headers: {
+              'Content-Type': 'application/json',
+              Authorization: token,
+
+          }
+      });
       const { checkInOutData, monthlyAttendance } = await response.json();
 
       const tableBody = document.getElementById('tableBody');
@@ -116,7 +126,7 @@
         const checkInPhotoCell = document.createElement('td');
         if (entry.checkInPhoto) {
           const checkInPhotoLink = document.createElement('a');
-          checkInPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkInPhoto}`;
+          checkInPhotoLink.href = `${apiUrl}/images/${entry.checkInPhoto}`;
           checkInPhotoLink.textContent = 'View Photo';
           checkInPhotoCell.appendChild(checkInPhotoLink);
         } else {
@@ -128,7 +138,7 @@
         const checkOutPhotoCell = document.createElement('td');
         if (entry.checkOutPhoto) {
           const checkOutPhotoLink = document.createElement('a');
-          checkOutPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkOutPhoto}`;
+          checkOutPhotoLink.href = `${apiUrl}/images/${entry.checkOutPhoto}`;
           checkOutPhotoLink.textContent = 'View Photo';
           checkOutPhotoCell.appendChild(checkOutPhotoLink);
         } else {

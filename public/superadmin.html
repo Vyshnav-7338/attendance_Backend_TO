@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Super Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <a class="navbar-brand" href="#">Super Admin Dashboard</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <button class="btn btn-danger" id="logoutBtn">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -24,24 +24,24 @@
     </nav>
 
     <div class="container mt-5">
-        <h2>Create User</h2>
-        <form id="createUserForm">
+        <h2>Create Admin</h2>
+        <form id="createAdminForm">
             <div class="mb-3">
-                <label for="userName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="userName" required>
+                <label for="adminName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="adminName" required>
             </div>
             <div class="mb-3">
-                <label for="userEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="userEmail" required>
+                <label for="adminEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="adminEmail" required>
             </div>
             <div class="mb-3">
-                <label for="userPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="userPassword" required>
+                <label for="adminPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="adminPassword" required>
             </div>
-            <button type="submit" class="btn btn-primary">Create User</button>
+            <button type="submit" class="btn btn-primary">Create Admin</button>
         </form>
 
-        <h2 class="mt-5">User List</h2>
+        <h2 class="mt-5">Admin List</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -50,8 +50,8 @@
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
-            <tbody id="userList">
-                <!-- Users will be listed here -->
+            <tbody id="adminList">
+                <!-- Admins will be listed here -->
             </tbody>
         </table>
     </div>
@@ -59,48 +59,51 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="config.js"></script>
 
-    <script>
-      const token = localStorage.getItem("token");
- 
- if (!token) {
-   window.location.href = "../index.html";
- }
-</script> 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const apiUrl = getApiUrl();
-
-            const createUserForm = document.getElementById('createUserForm');
-
-            // Function to fetch and display users
-            async function fetchUsers() {
-                try {
+   <script>
      const token = localStorage.getItem("token");
 
-                    const response = await fetch(`${apiUrl}/admin/users`, {
-                        headers: {
-                          Authorization: token,
+if (!token) {
+  window.location.href = "../index.html";
+}
 
-                        }
+document.getElementById("logoutBtn").addEventListener("click", function() {
+    localStorage.removeItem("token");
+    window.location.href = "../index.html";
+  });
+   </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const createAdminForm = document.getElementById('createAdminForm');
+
+            // Function to fetch and display admins
+            async function fetchAdmins() {
+     const token = localStorage.getItem("token");
+     const apiUrl = getApiUrl();
+
+                try {
+                    const response = await fetch(`${apiUrl}/superadmin/admins`, {
+                        headers: {
+                        Authorization: token,
+                    },
                     });
 
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
 
-                    const users = await response.json();
+                    const admins = await response.json();
 
-                    const userList = document.getElementById('userList');
-                    userList.innerHTML = '';
+                    const adminList = document.getElementById('adminList');
+                    adminList.innerHTML = '';
 
-                    users.forEach(user => {
+                    admins.forEach(admin => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
-                            <td><button class="btn btn-danger btn-sm delete-user" data-id="${user._id}">Delete</button></td>
+                            <td>${admin.name}</td>
+                            <td>${admin.email}</td>
+                            <td><button class="btn btn-danger btn-sm delete-admin" data-id="${admin._id}">Delete</button></td>
                         `;
-                        userList.appendChild(row);
+                        adminList.appendChild(row);
                     });
                 } catch (error) {
                     console.error('There was a problem with the fetch operation:', error);
@@ -108,18 +111,18 @@
             }
 
             // Event listener for form submission
-            createUserForm.addEventListener('submit', async function(event) {
+            createAdminForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
 
-                const name = document.getElementById('userName').value;
-                const email = document.getElementById('userEmail').value;
-                const password = document.getElementById('userPassword').value;
+                const name = document.getElementById('adminName').value;
+                const email = document.getElementById('adminEmail').value;
+                const password = document.getElementById('adminPassword').value;
 
                 try {
      const token = localStorage.getItem("token");
      const apiUrl = getApiUrl();
 
-                    const response = await fetch(`${apiUrl}/users`, {
+                    const response = await fetch(`${apiUrl}/admin`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -133,30 +136,30 @@
                         throw new Error('Network response was not ok');
                     }
 
-                    fetchUsers();
-                    createUserForm.reset();
+                    fetchAdmins();
+                    createAdminForm.reset();
                 } catch (error) {
                     console.error('There was a problem with the fetch operation:', error);
-                    alert('Error creating user');
+                    alert('Error creating admin');
                 }
             });
 
-            // Fetch users when the page loads
-            fetchUsers();
+            // Fetch admins when the page loads
+            fetchAdmins();
 
-            // Event delegation for deleting users
-            document.getElementById('userList').addEventListener('click', async function(event) {
-                if (event.target.classList.contains('delete-user')) {
-                    const userId = event.target.getAttribute('data-id');
+            // Event delegation for deleting admins
+            document.getElementById('adminList').addEventListener('click', async function(event) {
+                if (event.target.classList.contains('delete-admin')) {
+                    const adminId = event.target.getAttribute('data-id');
 
                     try {
      const token = localStorage.getItem("token");
      const apiUrl = getApiUrl();
 
-                        const response = await fetch(`${apiUrl}/user/${userId}`, {
+                        const response = await fetch(`${apiUrl}/admin/${adminId}`, {
                             method: 'DELETE',
                             headers: {
-                              Authorization: token,
+                                Authorization: token,
 
                             }
                         });
@@ -165,10 +168,10 @@
                             throw new Error('Network response was not ok');
                         }
 
-                        fetchUsers();
+                        fetchAdmins();
                     } catch (error) {
                         console.error('There was a problem with the fetch operation:', error);
-                        alert('Error deleting user');
+                        alert('Error deleting admin');
                     }
                 }
             });

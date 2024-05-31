@@ -5,6 +5,7 @@ const CheckInOut = require('../models/CheckInOut');
 const multer = require("multer");
 const path = require("path");
 const authenticate = require('../jwt');
+const User = require('../models/User');
 
 
 const storage = multer.diskStorage({
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)+'.png'
     );
   },
 });
@@ -63,9 +64,10 @@ router.put('/api/checkout', upload.single('checkOutPhoto'),authenticate, async (
   }
 });
 
-router.get('/api/attendance', async (req, res) => {
+router.get('/api/attendance',authenticate, async (req, res) => {
   try {
       let filter = {};
+      filter['userId']=req.userId;
       const { date } = req.query;
       
       // If date is provided, filter by createdAt date
@@ -103,11 +105,19 @@ router.get('/api/checkInOut/status', authenticate, async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.get('/api/checkInOut', async (req, res) => {
+router.get('/api/checkInOut', authenticate, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
-    let query = {};
+    const adminId = req.userId;
 
+    // Fetch users managed by the current admin
+    const managedUsers = await User.find({ adminId }).select('_id').exec();
+    const managedUserIds = managedUsers.map(user => user._id);
+
+    // Build the query for CheckInOut collection
+    let query = {
+      userId: { $in: managedUserIds }
+    };
     if (startDate && endDate) {
       query.createdAt = {
         $gte: new Date(startDate),
@@ -119,7 +129,9 @@ router.get('/api/checkInOut', async (req, res) => {
       query.createdAt = { $lt: new Date(new Date(endDate).setDate(new Date(endDate).getDate() + 1)) };
     }
 
-    const checkInOutData = await CheckInOut.find(query).populate('userId', 'name').exec();
+    const checkInOutData = await CheckInOut.find(query)
+      .populate('userId', 'name')
+      .exec();
 
     // Calculate monthly attendance for each user separately
     const monthlyAttendance = {};

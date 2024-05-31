@@ -7,10 +7,11 @@ const User = require('../models/User');
 const authenticate = require('../jwt');
 
 // Registration
-router.post('/users', async (req, res) => {
+router.post('/users',authenticate ,async (req, res) => {
+  const adminId = req.userId;
   try {
     const { name, email, password } = req.body;
-    const user = new User({ name, email, password,role:'user' });
+    const user = new User({ name, email, password, adminId, role: 'user' });
     await user.save();
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
@@ -42,6 +43,63 @@ router.post('/api/login', async (req, res) => {
         console.error('Error in login:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
+});
+// Route to create an Admin
+router.post('/admin', authenticate, async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+      const admin = new User({ name, email, password, role: 'admin' });
+      await admin.save();
+      res.status(201).json({ message: 'Admin created successfully' });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+// Route for admin to view the list of users they created
+router.get('/admin/users', authenticate, async (req, res) => {
+  try {
+      const users = await User.find({ adminId: req.userId });
+      res.status(200).json(users);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+// Route for super admin to view the list of admins
+router.get('/superadmin/admins', authenticate, async (req, res) => {
+  try {
+      const admins = await User.find({ role: 'admin' });
+      res.status(200).json(admins);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+
+// Route to delete an admin
+router.delete('/admin/:id', authenticate, async (req, res) => {
+  try {
+      const admin = await User.findByIdAndDelete(req.params.id);
+      if (!admin) {
+          return res.status(404).json({ error: 'Admin not found' });
+      }
+      res.status(200).json({ message: 'Admin deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/user/:id', authenticate, async (req, res) => {
+  try {
+      const admin = await User.findByIdAndDelete(req.params.id);
+      if (!admin) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+      res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
 });
 
 // User Profile

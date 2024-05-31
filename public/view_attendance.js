@@ -1,7 +1,7 @@
 document.getElementById('fetchAttendanceBtn').addEventListener('click', async function() {
   const date = document.getElementById('date').value;
   const token = localStorage.getItem("token");
-
+  
   try {
       const response = await fetch(`http://68.178.163.246:3004/api/attendance?date=${date}`, {
           headers: {
@@ -51,7 +51,7 @@ function populateAttendanceTable(data) {
       const checkInPhotoCell = document.createElement('td');
       if (entry.checkInPhoto) {
           const checkInPhotoLink = document.createElement('a');
-          checkInPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkInPhoto}`;
+          checkInPhotoLink.href = `http://localhost:3004/images/${entry.checkInPhoto}`;
           checkInPhotoLink.textContent = 'View Photo';
           checkInPhotoCell.appendChild(checkInPhotoLink);
       } else {
@@ -63,7 +63,7 @@ function populateAttendanceTable(data) {
       const checkOutPhotoCell = document.createElement('td');
       if (entry.checkOutPhoto) {
           const checkOutPhotoLink = document.createElement('a');
-          checkOutPhotoLink.href = `http://68.178.163.246:3004/images/${entry.checkOutPhoto}`;
+          checkOutPhotoLink.href = `http://localhost:3004/images/${entry.checkOutPhoto}`;
           checkOutPhotoLink.textContent = 'View Photo';
           checkOutPhotoCell.appendChild(checkOutPhotoLink);
       } else {
