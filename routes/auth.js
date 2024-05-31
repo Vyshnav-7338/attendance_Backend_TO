@@ -11,7 +11,14 @@ router.post("/users", authenticate, async (req, res) => {
   const adminId = req.userId;
   try {
     const { name, email, password } = req.body;
-    const user = new User({ name, email, password, adminId, role: "user" });
+    const user = new User({
+      name,
+      email,
+      password,
+      adminId,
+      phone,
+      role: "user",
+    });
     await user.save();
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
@@ -49,7 +56,7 @@ router.post("/admin", authenticate, async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const admin = new User({ name, email, password, role: "admin" });
+    const admin = new User({ name, email, password, phone, role: "admin" });
     await admin.save();
     res.status(201).json({ message: "Admin created successfully" });
   } catch (error) {
