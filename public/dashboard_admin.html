@@ -1,36 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Tracker - Welcome Admin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        h3 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .btn-primary, .btn-danger {
+            background-color: #ff758c;
+            border: none;
+            margin: 0.5rem;
+        }
+        .btn-primary:hover, .btn-danger:hover {
+            background-color: #ff7eb3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
     <div class="container mt-5">
-      <h2>Welcome Admin</h2>
-      <button class="btn btn-danger" id="logoutBtn">Logout</button>
+        <h2>Welcome Admin</h2>
+        <button class="btn btn-danger" id="logoutBtn">Logout</button>
 
-      <div>
-        <h3>User Management</h3>
-        <button
-          class="btn btn-primary"
-          onclick="window.location.href='create_user.html'"
-        >
-          Create User
-        </button>
-        <button
-          class="btn btn-primary"
-          onclick="window.location.href='view_details.html'"
-        >
-          View Check-in/Check-out Details
-        </button>
-      </div>
+        <div>
+            <h3>User Management</h3>
+            <button
+                class="btn btn-primary"
+                onclick="window.location.href='create_user.html'"
+            >
+                Create User
+            </button>
+            <button
+                class="btn btn-primary"
+                onclick="window.location.href='view_details.html'"
+            >
+                View Check-in/Check-out Details
+            </button>
+        </div>
     </div>
-  </body>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     const token = localStorage.getItem("token");
 
@@ -43,4 +84,5 @@
       window.location.href = "../index.html";
     });
   </script>
+</body>
 </html>

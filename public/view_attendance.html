@@ -1,51 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>View Attendance</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Tracker - Fetch Attendance</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+        }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .btn-primary {
+            background-color: #6a11cb;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #2575fc;
+        }
+        .table th, .table td {
+            color: #fff;
+            border-color: #fff;
+        }
+    </style>
+</head>
+<body>
     <div class="container mt-5">
-      <h2>View Attendance</h2>
-      <div class="form-group">
-        <label for="date">Enter Date (YYYY-MM-DD):</label>
-        <input
-          type="text"
-          class="form-control"
-          id="date"
-          placeholder="YYYY-MM-DD"
-          required
-        />
-      </div>
-      <button id="fetchAttendanceBtn" class="btn btn-primary">
-        Fetch Attendance
-      </button>
-      <table class="table mt-3">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Check-in Time</th>
-            <th>Check-out Time</th>
-            <th>Check-in Photo</th>
-            <th>Check-out Photo</th>
-          </tr>
-        </thead>
-        <tbody id="attendanceTableBody"></tbody>
-      </table>
+        <h2>View Attendance</h2>
+        <div class="form-group">
+            <label for="date">Enter Date (YYYY-MM-DD):</label>
+            <input
+                type="text"
+                class="form-control"
+                id="date"
+                placeholder="YYYY-MM-DD"
+                required
+            />
+        </div>
+        <button id="fetchAttendanceBtn" class="btn btn-primary">
+            Fetch Attendance
+        </button>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Check-in Time</th>
+                    <th>Check-out Time</th>
+                    <th>Check-in Photo</th>
+                    <th>Check-out Photo</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTableBody"></tbody>
+        </table>
     </div>
 
     <script>
-      const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-      if (!token) {
-        window.location.href = "../index.html";
-      }
+        if (!token) {
+            window.location.href = "../index.html";
+        }
     </script>
     <script src="view_attendance.js"></script>
-  </body>
+</body>
 </html>

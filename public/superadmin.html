@@ -1,83 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Super Admin Dashboard</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Super Admin Dashboard</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <button class="btn btn-danger" id="logoutBtn">Logout</button>
-            </li>
-          </ul>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Tracker - Super Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+        h2 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .form-label, .table th, .table td {
+            color: #fff;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+        }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .btn-primary, .btn-danger {
+            background-color: #6a11cb;
+            border: none;
+            margin: 0.5rem;
+        }
+        .btn-primary:hover, .btn-danger:hover {
+            background-color: #2575fc;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #ff6b6b;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .table-striped thead {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Super Admin Dashboard</a>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <button class="btn btn-danger" id="logoutBtn">Logout</button>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </nav>
 
     <div class="container mt-5">
-      <h2>Create Admin</h2>
-      <form id="createAdminForm">
-        <div class="mb-3">
-          <label for="adminName" class="form-label">Name</label>
-          <input type="text" class="form-control" id="adminName" required />
-        </div>
-        <div class="mb-3">
-          <label for="adminEmail" class="form-label">Email</label>
-          <input type="email" class="form-control" id="adminEmail" required />
-        </div>
-        <div class="mb-3">
-          <label for="adminPhone" class="form-label">Phone</label>
-          <input type="text" class="form-control" id="adminPhone" required />
-        </div>
-        <div class="mb-3">
-          <label for="adminPassword" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="adminPassword"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Create Admin</button>
-      </form>
+        <h2>Create Admin</h2>
+        <form id="createAdminForm">
+            <div class="mb-3">
+                <label for="adminName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="adminName" required />
+            </div>
+            <div class="mb-3">
+                <label for="adminEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="adminEmail" required />
+            </div>
+            <div class="mb-3">
+                <label for="adminPhone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="adminPhone" required />
+            </div>
+            <div class="mb-3">
+                <label for="adminPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="adminPassword" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Create Admin</button>
+        </form>
 
-      <h2 class="mt-5">Admin List</h2>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="adminList">
-          <!-- Admins will be listed here -->
-        </tbody>
-      </table>
+        <h2 class="mt-5">Admin List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="adminList">
+                <!-- Admins will be listed here -->
+            </tbody>
+        </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="config.js"></script>
 
     <script>

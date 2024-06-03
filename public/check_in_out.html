@@ -1,108 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Check In/Out</title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Tracker - Check In/Out</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-      /* Custom CSS */
-      body {
-        background-color: #f8f9fa; /* Light gray background */
-      }
-      .container {
-        background-color: #fff; /* White container background */
-        border-radius: 5px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-      }
-      h1,
-      h2 {
-        color: #007bff; /* Blue headings */
-      }
-      .btn-primary {
-        background-color: #007bff; /* Blue button */
-        border-color: #007bff;
-      }
-      .btn-primary:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        border-color: #0056b3;
-      }
-      .video-container,
-      .photo-container {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      video,
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-      #video,
-      #videoOut {
-        display: block;
-      }
-      #photoCheckIn,
-      #photoCheckOut {
-        display: none;
-      }
+        body {
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        h2 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        .video-container {
+            margin-bottom: 1rem;
+        }
+        video, img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: #ff758c;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #ff7eb3;
+        }
+        #photoCheckIn, #photoCheckOut {
+            display: none;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container mt-5">
-      <h1>Check In/Out</h1>
+        <h1>Check In/Out</h1>
 
-      <div id="checkInFormContainer">
-        <h2>Check In</h2>
-        <div class="video-container">
-          <video id="video" playsinline autoplay></video>
-          <img id="photoCheckIn" alt="Check In Photo" />
+        <div id="checkInFormContainer">
+            <h2>Check In</h2>
+            <div class="video-container">
+                <video id="video" playsinline autoplay></video>
+                <img id="photoCheckIn" alt="Check In Photo" />
+            </div>
+            <button id="startCameraCheckIn" class="btn btn-primary">
+                Start Camera
+            </button>
+            <button id="takePhotoCheckIn" class="btn btn-primary" style="display: none">
+                Take Photo
+            </button>
+            <button id="checkIn" class="btn btn-primary" style="display: none">
+                Check In
+            </button>
         </div>
-        <button id="startCameraCheckIn" class="btn btn-primary">
-          Start Camera
-        </button>
-        <button
-          id="takePhotoCheckIn"
-          class="btn btn-primary"
-          style="display: none"
-        >
-          Take Photo
-        </button>
-        <button id="checkIn" class="btn btn-primary" style="display: none">
-          Check In
-        </button>
-      </div>
 
-      <div id="checkOutFormContainer" style="display: none">
-        <h2>Check Out</h2>
-        <div class="video-container">
-          <video id="videoOut" playsinline autoplay></video>
-          <img id="photoCheckOut" alt="Check Out Photo" />
+        <div id="checkOutFormContainer" style="display: none">
+            <h2>Check Out</h2>
+            <div class="video-container">
+                <video id="videoOut" playsinline autoplay></video>
+                <img id="photoCheckOut" alt="Check Out Photo" />
+            </div>
+            <button id="startCameraCheckOut" class="btn btn-primary">
+                Start Camera
+            </button>
+            <button id="takePhotoCheckOut" class="btn btn-primary" style="display: none">
+                Take Photo
+            </button>
+            <button id="checkOut" class="btn btn-primary" style="display: none">
+                Check Out
+            </button>
         </div>
-        <button id="startCameraCheckOut" class="btn btn-primary">
-          Start Camera
-        </button>
-        <button
-          id="takePhotoCheckOut"
-          class="btn btn-primary"
-          style="display: none"
-        >
-          Take Photo
-        </button>
-        <button id="checkOut" class="btn btn-primary" style="display: none">
-          Check Out
-        </button>
-      </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="config.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
