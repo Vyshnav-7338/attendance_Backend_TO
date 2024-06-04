@@ -8,8 +8,6 @@ module.exports = {
         "storage",
         "public",
         ".git",
-        "backup_data",
-        "tmp",
       ],
     },
   ],
